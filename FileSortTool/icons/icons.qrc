@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>octopus.ico</file>
+        <file>octopus.png</file>
+    </qresource>
+</RCC>
