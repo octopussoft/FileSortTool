@@ -7,6 +7,8 @@
 #include <QDateTime>
 #include <QSettings>
 
+#include <qexifimageheader.h>
+
 #include "overwritedialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -37,6 +39,7 @@ void MainWindow::loadSettings()
     mOutputPath = settings->value("mOutputPath", "").toString();
     mSortCriteriaModifyDate = settings->value("mSortCriteriaModifyDate", true).toBool();
     mSortCriteriaCreationDate = settings->value("mSortCriteriaCreationDate", false).toBool();
+    mSortCriteriaExifDate = settings->value("mSortCriteriaExifDate", false).toBool();
     mSortCriteriaRecursive = settings->value("mSortCriteriaRecursive", false).toBool();
     mSortCriteriaCopy = settings->value("mSortCriteriaCopy", false).toBool();
     mSortOptionYear = settings->value("mSortOptionYear", false).toBool();
@@ -53,6 +56,7 @@ void MainWindow::saveSettings()
     settings->setValue("mOutputPath", mOutputPath);
     settings->setValue("mSortCriteriaModifyDate", mSortCriteriaModifyDate);
     settings->setValue("mSortCriteriaCreationDate", mSortCriteriaCreationDate);
+    settings->setValue("mSortCriteriaExifDate", mSortCriteriaExifDate);
     settings->setValue("mSortCriteriaRecursive", mSortCriteriaRecursive);
     settings->setValue("mSortCriteriaCopy", mSortCriteriaCopy);
     settings->setValue("mSortOptionYear", mSortOptionYear);
@@ -68,6 +72,7 @@ void MainWindow::initializeGui()
     ui->chOptionRecursive->setChecked(mSortCriteriaRecursive);
     ui->rbSortCriteriaCreationDate->setChecked(mSortCriteriaCreationDate);
     ui->rbSortCriteriaModifyDate->setChecked(mSortCriteriaModifyDate);
+    ui->rbSortCriteriaExifDate->setChecked(mSortCriteriaExifDate);
     ui->rbSortOptionDay->setChecked(mSortOptionDay);
     ui->rbSortOptionMonth->setChecked(mSortOptionMonth);
     ui->rbSortOptionYear->setChecked(mSortOptionYear);
@@ -79,6 +84,7 @@ void MainWindow::saveGui()
     mOutputPath = ui->txtOutputPath->text();
     mSortCriteriaModifyDate = ui->rbSortCriteriaModifyDate->isChecked();
     mSortCriteriaCreationDate = ui->rbSortCriteriaCreationDate->isChecked();
+    mSortCriteriaExifDate = ui->rbSortCriteriaExifDate->isChecked();
     mSortCriteriaRecursive = ui->chOptionRecursive->isChecked();
     mSortCriteriaCopy = ui->chOptionCopy->isChecked();
     mSortOptionYear = ui->rbSortOptionYear->isChecked();
@@ -170,6 +176,11 @@ void MainWindow::on_btnSortStart_clicked()
                 sortTime = fileInfo.lastModified();
             } else if (mSortCriteriaCreationDate == true)  {
                 sortTime = fileInfo.birthTime();
+            } else if ((mSortCriteriaExifDate == true) && (fileInfo.suffix() == "jpg"))  {
+                QExifImageHeader* exifData = new QExifImageHeader(fileList[i]);
+                QExifValue exifValue;
+                exifValue = exifData->value(QExifImageHeader::DateTime);
+                sortTime = exifValue.toDateTime();
             }
 
             /* compose folder stucture */

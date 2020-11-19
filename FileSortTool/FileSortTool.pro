@@ -2,6 +2,8 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x000000
+
 CONFIG += c++11
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -11,11 +13,13 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    overwritedialog.cpp
+    overwritedialog.cpp \
+    qexifimageheader.cpp
 
 HEADERS += \
     mainwindow.h \
-    overwritedialog.h
+    overwritedialog.h \
+    qexifimageheader.h
 
 FORMS += \
     mainwindow.ui \

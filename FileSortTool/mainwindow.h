@@ -20,6 +20,7 @@ private:
     QString mOutputPath = "";
     bool mSortCriteriaModifyDate = false;
     bool mSortCriteriaCreationDate = false;
+    bool mSortCriteriaExifDate = false;
     bool mSortCriteriaRecursive = false;
     bool mSortCriteriaCopy = false;
     bool mSortOptionYear = false;
